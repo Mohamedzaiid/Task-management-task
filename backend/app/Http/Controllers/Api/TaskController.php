@@ -24,7 +24,7 @@ class TaskController extends Controller
         if ($user->isAdmin()) {
             $tasks = Task::with('user')->latest()->get();
         } else {
-            $tasks = $user->tasks()->latest()->get();
+            $tasks = $user->tasks()->with('user')->latest()->get();
         }
 
         return TaskResource::collection($tasks);
