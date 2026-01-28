@@ -1,0 +1,39 @@
+<?php
+
+namespace App\Http\Requests;
+
+use App\Models\Task;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
+class StoreTaskRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        $rules = [
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'status' => ['nullable', Rule::in(Task::STATUSES)],
+        ];
+
+        // Only admin can assign tasks to other users
+        if ($this->user() && $this->user()->isAdmin()) {
+            $rules['user_id'] = ['nullable', 'exists:users,id'];
+        }
+
+        return $rules;
+    }
+}
