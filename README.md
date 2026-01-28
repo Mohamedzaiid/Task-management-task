@@ -23,7 +23,7 @@ php artisan key:generate
 php artisan migrate --seed
 php artisan serve
 ```
-
+config the database in .env file
 ### Frontend Setup
 ```bash
 cd frontend
